@@ -1,0 +1,87 @@
+// In V it's idiomatic to communicate errors via an
+// explicit, separate return value. This contrasts with
+// the exceptions used in languages like Java and Ruby and
+// the overloaded single result / error value sometimes
+// used in C. V's approach makes it easy to see which
+// fntions return errors and to handle them using the
+// same language constructs employed for any other,
+// non-error tasks.
+
+module main
+
+import (
+	"errors"
+	
+)
+
+// By convention, errors are the last return value and
+// have type `error`, a built-in interface.
+fn f1(arg int) (int, error) {
+	if arg == 42 {
+
+		// `errors.New` constructs a basic `error` value
+		// with the given error message.
+		return -1, errors.New("can't work with 42")
+
+	}
+
+	// A `nil` value in the error position indicates that
+	// there was no error.
+	return arg + 3, nil
+}
+
+// It's possible to use custom types as `error`s by
+// implementing the `Error()` method on them. Here's a
+// variant on the example above that uses a custom type
+// to explicitly represent an argument error.
+type argError struct {
+	arg  int
+	prob string
+}
+
+fn (e *argError) Error() string {
+	return fmt.Sprintf("%d - %s", e.arg, e.prob)
+}
+
+fn f2(arg int) (int, error) {
+	if arg == 42 {
+
+		// In this case we use `&argError` syntax to build
+		// a new struct, supplying values for the two
+		// fields `arg` and `prob`.
+		return -1, &argError{arg, "can't work with it"}
+	}
+	return arg + 3, nil
+}
+
+fn main() {
+
+	// The two loops below test out each of our
+	// error-returning fntions. Note that the use of an
+	// inline error check on the `if` line is a common
+	// idiom in V code.
+	for _, i := range []int{7, 42} {
+		if r, e := f1(i); e != nil {
+			println("f1 failed:", e)
+		} else {
+			println("f1 worked:", r)
+		}
+	}
+	for _, i := range []int{7, 42} {
+		if r, e := f2(i); e != nil {
+			println("f2 failed:", e)
+		} else {
+			println("f2 worked:", r)
+		}
+	}
+
+	// If you want to programmatically use the data in
+	// a custom error, you'll need to get the error as an
+	// instance of the custom error type via type
+	// assertion.
+	_, e := f2(42)
+	if ae, ok := e.(*argError); ok {
+		println(ae.arg)
+		println(ae.prob)
+	}
+}

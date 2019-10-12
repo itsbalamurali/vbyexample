@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>V by Example</title>
+    <link rel=stylesheet href="site.css">
+  </head>
+  <body>
+    <div id="intro">
+      <h2><a href="./">V by Example</a></h2>
+      <p>
+        <a href="http://vlang.io">V</a> is an
+        open source programming language designed for
+        building simple, fast, and reliable software.
+      </p>
+
+      <p>
+        <em>V by Example</em> is a hands-on introduction
+        to V using annotated example programs. Check out
+        the <a href="hello-world">first example</a> or
+        browse the full list below.
+      </p>
+
+      <ul>
+      {{range .}}
+        <li><a href="{{.ID}}">{{.Name}}</a></li>
+      {{end}}
+      </ul>
+      <p class="footer">
+        by <a href="https://balamurali.me">Balamurali Pandranki</a> | <a href="https://github.com/itsbalamurali/vbyexample">source</a> | <a href="https://github.com/itsbalamurali/vbyexample#license">license</a> | Inspired by <a href="https://gobyexample.com">Go by Example - Mark McGranaghan</a> |
+      </p>
+    </div>
+  </body>
+</html>
